@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/kellyjanderson/spacedress/main/spec/spacedress-style.schema.json",
+  "title": "SpaceDress Style Manifest",
+  "description": "Declarative styling for identifying macOS full-screen Space participants in Mission Control.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifestVersion", "layers"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "manifestVersion": { "const": "0.1" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "description": { "type": "string", "maxLength": 500 },
+    "layers": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/borderLayer" },
+          { "$ref": "#/$defs/tintLayer" },
+          { "$ref": "#/$defs/iconLayer" },
+          { "$ref": "#/$defs/textLayer" },
+          { "$ref": "#/$defs/imageLayer" }
+        ]
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]*$" },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"
+    },
+    "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+    "contexts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["single", "split"] }
+    },
+    "placement": {
+      "enum": [
+        "topLeading", "top", "topTrailing",
+        "leading", "center", "trailing",
+        "bottomLeading", "bottom", "bottomTrailing",
+        "fill"
+      ]
+    },
+    "nonFillPlacement": {
+      "enum": [
+        "topLeading", "top", "topTrailing",
+        "leading", "center", "trailing",
+        "bottomLeading", "bottom", "bottomTrailing"
+      ]
+    },
+    "semanticSize": { "enum": ["small", "medium", "large", "xLarge"] },
+    "layerId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "borderLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "color"],
+      "properties": {
+        "id": { "$ref": "#/$defs/layerId" },
+        "contexts": { "$ref": "#/$defs/contexts" },
+        "type": { "const": "border" },
+        "color": { "$ref": "#/$defs/color" },
+        "width": { "enum": ["hairline", "thin", "medium", "thick"] },
+        "cornerRadius": { "enum": ["system", "square", "rounded"] },
+        "opacity": { "$ref": "#/$defs/opacity" }
+      }
+    },
+    "tintLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "color"],
+      "properties": {
+        "id": { "$ref": "#/$defs/layerId" },
+        "contexts": { "$ref": "#/$defs/contexts" },
+        "type": { "const": "tint" },
+        "color": { "$ref": "#/$defs/color" },
+        "opacity": { "$ref": "#/$defs/opacity" }
+      }
+    },
+    "iconLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "source"],
+      "properties": {
+        "id": { "$ref": "#/$defs/layerId" },
+        "contexts": { "$ref": "#/$defs/contexts" },
+        "type": { "const": "icon" },
+        "source": { "enum": ["bundleIcon", "resource"] },
+        "resource": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "placement": { "$ref": "#/$defs/nonFillPlacement" },
+        "size": { "$ref": "#/$defs/semanticSize" },
+        "background": { "enum": ["none", "material", "scrim"] },
+        "opacity": { "$ref": "#/$defs/opacity" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "source": { "const": "resource" } }, "required": ["source"] },
+          "then": { "required": ["resource"] }
+        },
+        {
+          "if": { "properties": { "source": { "const": "bundleIcon" } }, "required": ["source"] },
+          "then": { "not": { "required": ["resource"] } }
+        }
+      ]
+    },
+    "textLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "source"],
+      "properties": {
+        "id": { "$ref": "#/$defs/layerId" },
+        "contexts": { "$ref": "#/$defs/contexts" },
+        "type": { "const": "text" },
+        "source": { "enum": ["appTitle", "documentTitle", "literal"] },
+        "text": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "placement": { "$ref": "#/$defs/nonFillPlacement" },
+        "size": { "$ref": "#/$defs/semanticSize" },
+        "weight": { "enum": ["regular", "medium", "semibold", "bold"] },
+        "color": { "$ref": "#/$defs/color" },
+        "background": { "enum": ["none", "material", "scrim"] },
+        "maxLines": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "opacity": { "$ref": "#/$defs/opacity" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "source": { "const": "literal" } }, "required": ["source"] },
+          "then": { "required": ["text"] }
+        },
+        {
+          "if": { "properties": { "source": { "enum": ["appTitle", "documentTitle"] } }, "required": ["source"] },
+          "then": { "not": { "required": ["text"] } }
+        }
+      ]
+    },
+    "imageLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "resource"],
+      "properties": {
+        "id": { "$ref": "#/$defs/layerId" },
+        "contexts": { "$ref": "#/$defs/contexts" },
+        "type": { "const": "image" },
+        "resource": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "placement": { "$ref": "#/$defs/placement" },
+        "contentMode": { "enum": ["fit", "fill"] },
+        "opacity": { "$ref": "#/$defs/opacity" },
+        "blendMode": { "enum": ["sourceOver", "multiply", "screen", "overlay"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+name: Bug report
+description: Report behavior that contradicts a defined SpaceDress expectation.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for making the bug reproducible. Platform details matter because Mission Control behavior changes across macOS versions.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: SpaceDress version or commit
+      placeholder: e.g. main @ abc1234
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and build
+      placeholder: e.g. macOS 26.5 (build ...)
+    validations:
+      required: true
+  - type: dropdown
+    id: space-kind
+    attributes:
+      label: Space type
+      options:
+        - Single-app full screen
+        - Split/tiled full screen
+        - Regular Desktop Space
+        - Mission Control generally
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: topology
+    attributes:
+      label: Display and Mission Control configuration
+      description: Number of displays; separate-Spaces setting; automatic rearrangement setting; scaling if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Launch ...
+        2. Enter full screen ...
+        3. Open Mission Control ...
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Diagnostics, screenshots, or logs
+      description: Redact document titles, paths, and other private data before posting.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues for the same behavior.
+          required: true
+        - label: SIP is enabled, or I explicitly explained why it is not.
+          required: true

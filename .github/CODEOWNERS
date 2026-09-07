@@ -1,0 +1,13 @@
+# Default ownership
+* @kellyjanderson
+
+# Public style standard
+/spec/ @kellyjanderson
+/docs/decisions/ @kellyjanderson
+
+# Project/community policy
+/LICENSE @kellyjanderson
+/NOTICE @kellyjanderson
+/SECURITY.md @kellyjanderson
+/GOVERNANCE.md @kellyjanderson
+/.github/ @kellyjanderson

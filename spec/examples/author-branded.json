@@ -1,0 +1,50 @@
+{
+  "$schema": "../spacedress-style.schema.json",
+  "manifestVersion": "0.1",
+  "name": "Author branded",
+  "description": "Example of a distinctive app-supplied border, restrained tint, icon, and local artwork.",
+  "layers": [
+    {
+      "id": "accent-tint",
+      "type": "tint",
+      "color": "#6B5CFFFF",
+      "opacity": 0.12
+    },
+    {
+      "id": "accent-border",
+      "type": "border",
+      "color": "#8B80FFFF",
+      "width": "medium",
+      "cornerRadius": "system",
+      "opacity": 1.0
+    },
+    {
+      "id": "brand-mark",
+      "type": "image",
+      "resource": "SpaceDress/brand-mark.png",
+      "placement": "bottomTrailing",
+      "contentMode": "fit",
+      "opacity": 0.22,
+      "blendMode": "sourceOver",
+      "contexts": ["single"]
+    },
+    {
+      "id": "app-icon",
+      "type": "icon",
+      "source": "bundleIcon",
+      "placement": "topTrailing",
+      "size": "large",
+      "background": "material"
+    },
+    {
+      "id": "document",
+      "type": "text",
+      "source": "documentTitle",
+      "placement": "bottomLeading",
+      "size": "medium",
+      "weight": "semibold",
+      "background": "material",
+      "maxLines": 1
+    }
+  ]
+}

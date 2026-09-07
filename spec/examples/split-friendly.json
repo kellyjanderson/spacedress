@@ -1,0 +1,37 @@
+{
+  "$schema": "../spacedress-style.schema.json",
+  "manifestVersion": "0.1",
+  "name": "Split-friendly identity",
+  "description": "Avoids full-region artwork so the same style remains useful when clipped to one split participant.",
+  "layers": [
+    {
+      "id": "participant-border",
+      "type": "border",
+      "color": "#35C6A0",
+      "width": "thin",
+      "cornerRadius": "system",
+      "opacity": 0.95,
+      "contexts": ["single", "split"]
+    },
+    {
+      "id": "participant-icon",
+      "type": "icon",
+      "source": "bundleIcon",
+      "placement": "topTrailing",
+      "size": "medium",
+      "background": "scrim",
+      "contexts": ["single", "split"]
+    },
+    {
+      "id": "participant-title",
+      "type": "text",
+      "source": "appTitle",
+      "placement": "bottomLeading",
+      "size": "small",
+      "weight": "semibold",
+      "background": "scrim",
+      "maxLines": 1,
+      "contexts": ["single", "split"]
+    }
+  ]
+}

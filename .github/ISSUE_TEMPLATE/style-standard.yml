@@ -1,0 +1,48 @@
+name: Style Manifest standard proposal
+description: Propose a change to the public SpaceDress styling format.
+title: "[Manifest]: "
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What can an app or user not express with the current manifest?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Proposed manifest example
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Rendering semantics
+      description: Define behavior for single full-screen and split/tiled full-screen where relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility
+      description: What should older readers do when they see this field/layer/version?
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security and privacy
+      description: Address resources, paths, external data, document metadata, and executable behavior.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Manifest boundaries
+      options:
+        - label: The proposal remains declarative and does not execute app-supplied code or scripts.
+          required: true
+        - label: The proposal does not require remote assets.
+          required: true

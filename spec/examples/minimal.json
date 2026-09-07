@@ -1,0 +1,25 @@
+{
+  "$schema": "../spacedress-style.schema.json",
+  "manifestVersion": "0.1",
+  "name": "Minimal identity",
+  "layers": [
+    {
+      "id": "app-icon",
+      "type": "icon",
+      "source": "bundleIcon",
+      "placement": "topTrailing",
+      "size": "large",
+      "background": "material"
+    },
+    {
+      "id": "app-title",
+      "type": "text",
+      "source": "appTitle",
+      "placement": "bottomLeading",
+      "size": "medium",
+      "weight": "semibold",
+      "background": "material",
+      "maxLines": 1
+    }
+  ]
+}

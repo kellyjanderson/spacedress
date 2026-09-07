@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use, study, or redistribute SpaceDress, please cite the project and preserve the attribution required by its license."
+title: "SpaceDress"
+type: software
+authors:
+  - family-names: "Eldritch"
+    given-names: "Kelly"
+    alias: "kellyjanderson"
+repository-code: "https://github.com/kellyjanderson/spacedress"
+license: "Apache-2.0"
+keywords:
+  - macOS
+  - Mission Control
+  - Spaces
+  - fullscreen
+  - accessibility
+  - Swift
