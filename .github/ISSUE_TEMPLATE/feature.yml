@@ -1,0 +1,53 @@
+name: Feature or design proposal
+description: Propose a product, architecture, or workflow improvement.
+title: "[Proposal]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the user or engineering problem before the proposed mechanism.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Primary area
+      options:
+        - Full-screen Space identification
+        - Split/tiled full-screen
+        - Mission Control overlay
+        - Application identity
+        - User styling / wardrobe
+        - Regular Desktop Spaces
+        - macOS integration
+        - Developer tooling
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Explain the smallest useful version and how a user experiences it.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Include doing nothing, a user-level workaround, or a less invasive integration when relevant.
+  - type: textarea
+    id: constraints
+    attributes:
+      label: macOS / security constraints
+      description: Note private APIs, permissions, SIP, Mission Control layout assumptions, or version sensitivity.
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Project fit
+      options:
+        - label: This does not require weakening SIP for normal use.
+          required: true
+        - label: I considered the fullscreen-first project scope.
+          required: true

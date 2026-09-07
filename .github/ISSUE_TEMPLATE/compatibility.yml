@@ -1,0 +1,68 @@
+name: macOS compatibility report
+description: Record a platform/version/configuration observation, successful or broken.
+title: "[macOS]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Compatibility reports are project evidence. Successful results are useful too.
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and build
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Mac / architecture
+      placeholder: e.g. Apple silicon, M-series model if relevant
+    validations:
+      required: true
+  - type: input
+    id: displays
+    attributes:
+      label: Display configuration
+      placeholder: e.g. built-in + 4K external, separate Spaces enabled
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Space configuration tested
+      multiple: true
+      options:
+        - Single-app full screen
+        - Split/tiled full screen
+        - Regular Desktop Space
+        - Multiple displays
+    validations:
+      required: true
+  - type: textarea
+    id: interface
+    attributes:
+      label: Interface or capability tested
+      description: Name the SLS/CGS symbol, Accessibility path, preference data, or SpaceDress feature.
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: Raw observation
+      description: Record what was observed before interpreting it.
+    validations:
+      required: true
+  - type: textarea
+    id: conclusion
+    attributes:
+      label: Interpretation
+      description: State confidence and alternative explanations.
+  - type: checkboxes
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - label: SIP remained enabled during this test.
+          required: true
+        - label: I noted Accessibility / Screen Recording permissions if they affected the result.
+          required: true
