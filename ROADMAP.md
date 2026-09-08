@@ -88,16 +88,29 @@ The public standard is the **Desktop Switcher Appearance Specification (DSAS)**.
 Goal: polished end-user configuration using **SpaceDress's private multi-app user manifest**.
 
 - [ ] define internal multi-app manifest structure;
-- [ ] application selectors by bundle identity/location where needed;
+- [ ] application selectors keyed primarily by bundle identifier with optional bundle-location/signing refinement;
+- [ ] canonical unordered two-app pair selectors for split-specific styling;
+- [ ] pair-level container styling and contextual participant overrides;
+- [ ] runtime participant/window instance model distinct from process identity;
+- [ ] current-instance styling even when no durable document identity exists;
+- [ ] durable per-document/per-instance rules only when stable identity exists;
+- [ ] reusable per-app instance style sets;
+- [ ] manual instance-style selection;
+- [ ] sequential instance-style leasing so concurrent same-app windows receive different styles without relying on Mission Control order;
+- [ ] defined style-pool overflow behavior that remains visually distinguishable;
+- [ ] direct Mission Control context action such as **Customize This Instance** without making the normal overlay input-blocking;
+- [ ] direct **Customize This Split Pair** action for split Spaces;
 - [ ] visual style editor;
 - [ ] per-app rules;
-- [ ] per-document rules where stable identity exists;
 - [ ] reusable user style presets;
 - [ ] preview without entering Mission Control;
 - [ ] export/import SpaceDress configuration;
 - [ ] accessibility controls for contrast, motion, and transparency;
 - [ ] privacy control for document titles;
+- [ ] keep runtime instance lease/cache state separate from durable user configuration;
 - [ ] keep the internal user manifest outside DSAS conformance/versioning.
+
+**Exit criterion:** a user can distinguish and directly customize several visually identical fullscreen windows from the same application, and recurring split pairs can have their own styling without relying on native Space identity or left/right ordering.
 
 ## Phase 5 — Regular Desktops, where useful
 
