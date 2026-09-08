@@ -4,6 +4,8 @@ The roadmap is ordered by **risk retirement**, not by visual excitement. SpaceDr
 
 For prompt-by-prompt execution, use [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md). The roadmap defines product/risk phases; the implementation plan breaks those phases into tracked TDD slices that are intended to fit one coding-agent turn each.
 
+Pair and per-instance styling discovered after the main slice IDs were numbered is tracked in the required pre-v1 [`docs/instance-pair-styling-tdd.md`](docs/instance-pair-styling-tdd.md) addendum rather than renumbering the existing execution plan.
+
 ## Phase 0 — Measure the closet
 
 Goal: establish repeatable macOS capability probes with SIP enabled.
