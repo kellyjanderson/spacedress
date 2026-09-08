@@ -14,6 +14,22 @@ When documents disagree, prefer:
 
 Do not silently resolve a real contradiction. Surface it and update the appropriate source of truth.
 
+## Implementation-plan slices
+
+[`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) is the executable TDD backlog.
+
+When a prompt names an `SD-###` slice:
+
+- that slice is the scope boundary for the turn;
+- begin by adding the failing test, contract test, or reproducible system probe required by the slice;
+- implement only enough production behavior to satisfy that slice;
+- refactor only within the affected boundary while keeping tests green;
+- run the broader affected suite before reporting completion;
+- do not start adjacent unchecked slices merely because they are nearby or easy;
+- do not mark the checkbox complete unless every acceptance condition in the slice passes.
+
+A later slice may require an interface anticipated by an earlier slice. Implement the narrowest interface needed now; do not pre-implement future behavior.
+
 ## Non-negotiable project invariants
 
 - Full-screen Spaces are the primary use case.
