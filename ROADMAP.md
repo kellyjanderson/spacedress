@@ -2,6 +2,8 @@
 
 The roadmap is ordered by **risk retirement**, not by visual excitement. SpaceDress should prove it can identify and decorate full-screen Spaces reliably before building a large preference UI.
 
+For prompt-by-prompt execution, use [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md). The roadmap defines product/risk phases; the implementation plan breaks those phases into tracked TDD slices that are intended to fit one coding-agent turn each.
+
 ## Phase 0 — Measure the closet
 
 Goal: establish repeatable macOS capability probes with SIP enabled.
