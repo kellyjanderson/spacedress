@@ -16,9 +16,9 @@ Do not silently resolve a real contradiction. Surface it and update the appropri
 
 ## Implementation-plan slices
 
-[`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) is the executable TDD backlog.
+[`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) is the executable TDD backlog. Pair/instance styling added after its IDs were numbered is tracked in [`docs/instance-pair-styling-tdd.md`](docs/instance-pair-styling-tdd.md).
 
-When a prompt names an `SD-###` slice:
+When a prompt names an `SD-###` or `SI-###` slice:
 
 - that slice is the scope boundary for the turn;
 - begin by adding the failing test, contract test, or reproducible system probe required by the slice;
@@ -34,8 +34,14 @@ A later slice may require an interface anticipated by an earlier slice. Implemen
 
 - Full-screen Spaces are the primary use case.
 - Split/tiled full-screen is a first-class case, not an edge case.
-- Native Space IDs, UUIDs, indices, and positions are **ephemeral observations** unless a future ADR explicitly proves and narrows a stronger guarantee.
+- Native Space IDs, UUIDs, indices, positions, PIDs, and current window IDs are **ephemeral observations** unless a future ADR explicitly proves and narrows a stronger guarantee.
 - Do not use native Space identifiers as persistent user identity.
+- Bundle identifier is the default durable application customization key; optional bundle path/signing fields may refine an app selector when required.
+- A split-pair selector is a canonical unordered multiset of two app selectors. Left/right geometry is not persistent pair identity.
+- User-facing instance styling targets the current participant/window, not merely an application process.
+- Current-instance styling is allowed even without durable identity, but persistence beyond the confidently reconciled window lifetime must not be promised.
+- Durable per-instance/document styling requires a genuinely stable identity; a volatile window title alone does not qualify.
+- Sequential instance style assignment uses explicit runtime leases and reconciliation, never Mission Control ordering.
 - Do not require users to disable or weaken SIP.
 - Do not inject code into the Dock or WindowServer in the normal architecture.
 - Keep private SkyLight/CGS/SLS calls behind a platform adapter.
@@ -43,7 +49,7 @@ A later slice may require an interface anticipated by an earlier slice. Implemen
 - Split participant placement comes from window geometry. Never treat owner/PID/window array order as left/right.
 - SpaceDress must derive a useful appearance when an app supplies no integration metadata.
 - The public standard is the **Desktop Switcher Appearance Specification (DSAS)**; its document is a **Desktop Switcher Appearance Manifest (DSAM)**.
-- DSAS is application-facing and must not absorb SpaceDress branding, targeting rules, or the internal multi-app user manifest.
+- DSAS is application-facing and must not absorb SpaceDress branding, targeting rules, pair selectors, instance leases, or the internal multi-app user manifest.
 - DSAM data is declarative. Never add scripts, commands, dynamic libraries, remote JavaScript, or equivalent executable hooks.
 - No telemetry or network dependency without an explicit product decision.
 
@@ -59,6 +65,7 @@ Private macOS behavior changes. When working on platform integration:
 - record participant window IDs and bounds when testing split/tiled full-screen;
 - test unequal split ratios and swapped left/right participants;
 - test same-app split/tiled configurations;
+- test several same-process windows when implementing instance styling;
 - test single full-screen and split/tiled full-screen separately;
 - test multi-display behavior with both "Displays have separate Spaces" states when relevant.
 
@@ -70,6 +77,8 @@ Platform code should translate unstable system data into those models and attach
 
 A missing private symbol should produce a capability downgrade, not a crash.
 
+Keep runtime correlation/cache types separate from durable user selectors. A type containing PID, current window ID, or native Space reference should not casually become Codable user configuration.
+
 ## Appearance-source separation
 
 Keep these concepts distinct:
@@ -77,10 +86,13 @@ Keep these concepts distinct:
 ```text
 running app metadata ──> derived baseline ──> optional DSAM ──> application appearance
                                                                   │
-SpaceDress internal multi-app user manifest ──────────────────────┘
-                                                                  │
+                                  app user rule ───────────────────┤
+                                  pair context rule ───────────────┤
+                                  instance/document/style lease ──┤
                                                                   v
                                                         resolved appearance
+                                                                  │
+                                                        safety/privacy policy
 ```
 
 The internal SpaceDress user manifest may evolve independently. Do not publish it as DSAS merely because it uses similar visual primitives.
