@@ -220,6 +220,7 @@ Private macOS integration is isolated behind adapters. The domain model does not
 | [`docs/decisions/`](docs/decisions/) | Architecture Decision Records |
 | [`spec/`](spec/) | Desktop Switcher Appearance Specification and schema |
 | [`ROADMAP.md`](ROADMAP.md) | Sequenced feasibility and product milestones |
+| [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) | Prompt-sized TDD execution checklist from project bootstrap through release |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to contribute |
 
 ## Related work
