@@ -2,12 +2,14 @@
 
 > **Dapper attire for your Spaces.**
 
-SpaceDress is a macOS utility and open styling standard for making **full-screen Spaces immediately recognizable in Mission Control**.
+SpaceDress is a macOS utility for making **full-screen Spaces immediately recognizable in Mission Control**.
 
-Modern apps often look nearly identical as Mission Control thumbnails—especially when everything is in dark mode. SpaceDress decorates those thumbnails with useful identity: application icons, titles, document titles, borders, tints, and optional artwork.
+Modern applications often look nearly identical as Mission Control thumbnails—especially when everything is in dark mode. SpaceDress adds useful identity to those thumbnails: application icons, titles, document titles, borders, tints, and optional artwork.
+
+SpaceDress is also an implementation and early steward of the **Desktop Switcher Appearance Specification (DSAS)**, a neutral application-facing format that is deliberately not named after SpaceDress.
 
 > [!IMPORTANT]
-> SpaceDress is currently in the **design and feasibility** stage. This repository defines the product, architecture, integration policy, and style-manifest standard before implementation hardens those decisions into code.
+> SpaceDress is currently in the **design and feasibility** stage. This repository defines the product, architecture, integration policy, user-configuration model, and the experimental DSAS before implementation hardens those decisions into code.
 
 ## The problem
 
@@ -44,22 +46,54 @@ Priority order:
 3. regular Desktop Spaces where support falls out naturally;
 4. deeper Mission Control layout changes only if they can be achieved without compromising system integrity.
 
-Changing the spacing between Apple's Space thumbnails would be attractive, but it is not a core goal. SpaceDress will not disable SIP or inject code into the Dock merely to gain layout control.
+Changing the spacing between Apple's Space thumbnails would be useful, but it is not a core goal. SpaceDress will not disable SIP or inject code into the Dock merely to gain layout control.
 
-## What SpaceDress wants to show
+## Where appearance comes from
 
-A full-screen Space may be dressed with any combination of:
+SpaceDress has two configuration authorities.
 
-- the owning app's icon;
-- application title;
-- document/window title;
-- border color and weight;
-- translucent color overlay;
-- bitmap artwork supplied by the app or user;
-- split-screen participant identity;
-- user overrides.
+### 1. The application
 
-The renderer should make identification faster without obscuring the thumbnail it is identifying.
+An application should look useful in SpaceDress **without knowing SpaceDress exists**.
+
+SpaceDress first derives a baseline appearance from the actual running application:
+
+- bundle icon;
+- localized application name;
+- document/window title when available and permitted;
+- other bounded metadata that can be obtained safely from the running app and its bundle;
+- optional derived palette information, such as an accent inferred from the application icon.
+
+If an application someday ships a **Desktop Switcher Appearance Manifest (DSAM)**, that manifest can explicitly refine the application-side appearance. DSAM is defined by DSAS and is not a SpaceDress-branded format.
+
+No manifest is the normal case. Missing DSAM data is not an error and must never make an app less identifiable.
+
+### 2. The user
+
+SpaceDress maintains its own **multi-app user manifest** for customization and rules. It can target many applications and override application-derived or application-declared values.
+
+That multi-app manifest is internal SpaceDress machinery. It is **not part of DSAS**, is not an application integration surface, and carries no promise that another DSAS renderer will understand it.
+
+Resolution is conceptually:
+
+```text
+actual running app
+      │
+      ├─ derive baseline appearance
+      │
+      └─ overlay optional DSAM declarations
+                    │
+                    v
+          application appearance
+                    │
+                    v
+        SpaceDress user overrides
+                    │
+                    v
+             resolved appearance
+```
+
+The user has final authority.
 
 ## Identity, not Space numbers
 
@@ -74,38 +108,68 @@ Persistent styling is instead resolved from logical identity such as:
 - code-signing identity when useful;
 - runtime PID for same-bundle instance disambiguation;
 - document identity when available and explicitly used;
-- the ordered set of participants in a split full-screen Space.
+- the participant set in a split full-screen Space.
 
 See [The Space Model](docs/space-model.md).
 
-## The SpaceDress Style Manifest
+## Split/tiled full-screen geometry
 
-Apps should be able to ship their preferred Mission Control attire inside their own bundle. SpaceDress therefore defines a declarative, versioned manifest.
+Split full-screen participants are not merely an unordered pair of applications.
 
-A minimal example:
+SpaceDress aims to resolve the actual windows belonging to the Space and retain their geometry. From those bounds it can derive:
+
+- physical left/right placement;
+- participant width and split ratio;
+- normalized participant rectangles;
+- future top/bottom or more complex arrangements if macOS exposes them.
+
+Owner-array order is never treated as geometry.
+
+Conceptually:
+
+```text
+Space
+└── participants[]
+    ├── app identity
+    ├── window identity
+    ├── screen-space bounds
+    ├── normalized region
+    └── derived physical side
+```
+
+Mission Control decoration can then transform each normalized participant region into the corresponding region of the Space thumbnail. A 70/30 split remains a 70/30 split rather than becoming two guessed halves.
+
+## Desktop Switcher Appearance Specification
+
+The public standard is the **Desktop Switcher Appearance Specification (DSAS)**.
+
+A conforming application document is a **Desktop Switcher Appearance Manifest (DSAM)**.
+
+The naming is intentionally descriptive and implementation-neutral. SpaceDress is one renderer; the specification should remain useful to another macOS utility—or eventually another desktop environment—without adopting SpaceDress branding.
+
+A minimal DSAM example:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/kellyjanderson/spacedress/main/spec/spacedress-style.schema.json",
+  "$schema": "https://raw.githubusercontent.com/kellyjanderson/spacedress/main/spec/desktop-switcher-appearance.schema.json",
   "manifestVersion": "0.1",
   "layers": [
+    {
+      "type": "border",
+      "color": "#7A5CFF",
+      "width": "medium"
+    },
     {
       "type": "icon",
       "source": "bundleIcon",
       "placement": "topTrailing",
-      "size": 40
-    },
-    {
-      "type": "text",
-      "source": "appTitle",
-      "placement": "bottomLeading",
-      "background": "material"
+      "size": "large"
     }
   ]
 }
 ```
 
-The format is intentionally declarative: **no scripts, no remote assets, no arbitrary code execution**. See the [Style Manifest specification](spec/README.md).
+The format is intentionally declarative: **no scripts, no remote assets, no arbitrary code execution**. See the [Desktop Switcher Appearance Specification](spec/README.md).
 
 ## Architecture in one view
 
@@ -116,10 +180,13 @@ NSWorkspace / app bundles ─────────┘        │
                                             v
                                      Identity Resolver
                                             │
-                user override ──────────────┼──── app manifest
-                                            │
+                         ┌──────────────────┴─────────────────┐
+                         v                                    v
+                Application Appearance               SpaceDress User Manifest
+                derived + optional DSAM                       │
+                         └──────────────────┬─────────────────┘
                                             v
-                                       Style Resolver
+                                      Style Resolver
                                             │
                                             v
                                       Overlay Renderer
@@ -133,7 +200,10 @@ Private macOS integration is isolated behind adapters. The domain model does not
 - **Read before write.** Private Space APIs may be explored for read-only discovery; undocumented mutation is treated much more skeptically.
 - **Graceful degradation.** Missing private data removes a feature, not the app.
 - **Local by default.** SpaceDress does not need telemetry, an account, or a network service to dress local Spaces.
-- **Declarative styling.** App-provided styling is data, never executable code.
+- **Useful without adoption.** Applications require no manifest or integration for SpaceDress to identify them.
+- **Neutral public standard.** DSAS is not a SpaceDress configuration format.
+- **User configuration stays private to SpaceDress.** The multi-app user manifest is implementation machinery, not part of DSAS.
+- **Geometry beats ordering.** Split placement comes from window geometry, never owner-array position.
 - **Fullscreen behavior defines success.** Regular desktops must not distort the design away from the problem SpaceDress exists to solve.
 
 ## Repository map
@@ -143,17 +213,18 @@ Private macOS integration is isolated behind adapters. The domain model does not
 | [`docs/vision.md`](docs/vision.md) | Product intent, principles, and non-goals |
 | [`docs/architecture.md`](docs/architecture.md) | Component boundaries and data flow |
 | [`docs/space-model.md`](docs/space-model.md) | Runtime and persistent identity model |
+| [`docs/user-configuration-model.md`](docs/user-configuration-model.md) | Internal multi-app customization model |
 | [`docs/style-guide.md`](docs/style-guide.md) | Visual and interaction dress code |
 | [`docs/code-style.md`](docs/code-style.md) | Engineering conventions |
 | [`docs/research/`](docs/research/) | macOS integration evidence and prior art |
 | [`docs/decisions/`](docs/decisions/) | Architecture Decision Records |
-| [`spec/`](spec/) | SpaceDress Style Manifest standard and schema |
+| [`spec/`](spec/) | Desktop Switcher Appearance Specification and schema |
 | [`ROADMAP.md`](ROADMAP.md) | Sequenced feasibility and product milestones |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to contribute |
 
 ## Related work
 
-SpaceDress builds on lessons demonstrated by projects such as Hammerspoon, AltTab, Rename Spaces, DesktopRenamer, SpaceNamer, CloseUp, Control Room, Rectangle, and other macOS utilities that work around the limits of Mission Control. They are research references, not dependencies unless explicitly listed later.
+SpaceDress builds on lessons demonstrated by projects such as Hammerspoon, AltTab, Rename Spaces, DesktopRenamer, SpaceNamer, CloseUp, Control Room, Rectangle, yabai, and other macOS utilities that work around the limits of Mission Control. They are research references, not dependencies unless explicitly listed later.
 
 See [Prior Art](docs/research/prior-art.md).
 
@@ -163,7 +234,7 @@ SpaceDress is licensed under the [Apache License 2.0](LICENSE).
 
 Apache-2.0 permits commercial use and redistribution. It requires preservation of applicable copyright, license, and attribution notices and provides an express patent grant. The repository also includes a [`NOTICE`](NOTICE) file so attribution travels with derivative distributions.
 
-The **SpaceDress** name and project identity are not granted as trademarks by the Apache license. See [`TRADEMARKS.md`](TRADEMARKS.md).
+The **SpaceDress** name and project identity are not granted as trademarks by the Apache license. DSAS deliberately uses a descriptive name rather than depending on SpaceDress branding. See [`TRADEMARKS.md`](TRADEMARKS.md).
 
 If SpaceDress is useful in research, software, or a derived project, [`CITATION.cff`](CITATION.cff) provides a machine-readable citation.
 

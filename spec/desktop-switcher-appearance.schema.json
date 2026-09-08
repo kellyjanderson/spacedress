@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/kellyjanderson/spacedress/main/spec/spacedress-style.schema.json",
-  "title": "SpaceDress Style Manifest",
-  "description": "Declarative styling for identifying macOS full-screen Space participants in Mission Control.",
+  "$id": "https://raw.githubusercontent.com/kellyjanderson/spacedress/main/spec/desktop-switcher-appearance.schema.json",
+  "title": "Desktop Switcher Appearance Manifest",
+  "description": "Declarative application-supplied appearance metadata for desktop/workspace switcher representations.",
   "type": "object",
   "additionalProperties": false,
   "required": ["manifestVersion", "layers"],

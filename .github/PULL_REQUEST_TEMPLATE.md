@@ -2,9 +2,9 @@
 
 <!-- Describe the problem, decision, or behavior this PR addresses. -->
 
-## Why does it belong in SpaceDress?
+## Why does it belong in SpaceDress or DSAS?
 
-<!-- Tie the change to the fullscreen-first product goals or repository foundations. -->
+<!-- SpaceDress product changes should tie to product goals. DSAS changes should state the application-facing interoperability need. -->
 
 ## Evidence / verification
 
@@ -14,28 +14,31 @@
 - [ ] Manual verification described where automation is insufficient
 - [ ] Single-app full-screen considered
 - [ ] Split/tiled full-screen considered
+- [ ] Split geometry/ratio considered when relevant
 - [ ] Multi-display behavior considered when relevant
 
 ## Architecture and compatibility
 
 - [ ] No persistent identity depends on a native Space ID/index/UUID
+- [ ] Split side is not inferred from owner/PID/window array order
 - [ ] Private macOS interfaces remain isolated behind adapters
 - [ ] No feature requires SIP to be weakened
-- [ ] Public manifest compatibility is preserved or explicitly documented
+- [ ] DSAS compatibility is preserved or explicitly documented
+- [ ] SpaceDress internal user configuration has not been accidentally promoted into DSAS
 - [ ] ADR added/updated if a core invariant changes
 
 ## Privacy / security
 
-<!-- Note new permissions, metadata collection, logging, screenshots, network access, or manifest capabilities. -->
+<!-- Note new permissions, metadata collection, logging, screenshots, network access, or DSAM capabilities. -->
 
 - [ ] No sensitive document titles/paths are added to routine logs
-- [ ] No executable or remote behavior is introduced through style data
+- [ ] No executable or remote behavior is introduced through application appearance data
 
 ## Documentation
 
 - [ ] User-visible behavior is documented
 - [ ] Research claims are labeled and sourced
-- [ ] Examples/schema updated for manifest changes
+- [ ] Examples/schema updated for DSAS changes
 
 ## Visual changes
 

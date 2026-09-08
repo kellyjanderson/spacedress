@@ -12,7 +12,11 @@ The project is currently pre-release and specification-first.
 - established the rule that native Space identifiers are ephemeral observations, not durable identity;
 - selected overlay-based Mission Control augmentation as the preferred architecture;
 - documented read-only private SkyLight/CGS integration policy;
-- published the experimental SpaceDress Style Manifest v0.1;
+- separated the neutral **Desktop Switcher Appearance Specification (DSAS)** from the SpaceDress product name;
+- defined **Desktop Switcher Appearance Manifest (DSAM)** as the application-facing document;
+- made renderer-derived application appearance the normal no-integration baseline;
+- separated SpaceDress's internal multi-app user manifest from DSAS;
+- established window geometry—not owner-array order—as the source of truth for split participant placement and ratio;
 - added repository contribution, security, governance, attribution, and maintenance guidance.
 
-The Style Manifest has its own version history in [`spec/CHANGELOG.md`](spec/CHANGELOG.md).
+DSAS has its own version history in [`spec/CHANGELOG.md`](spec/CHANGELOG.md).

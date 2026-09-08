@@ -7,13 +7,14 @@ This directory is the project's design record. The application is expected to ch
 1. [`vision.md`](vision.md) — what SpaceDress is trying to accomplish.
 2. [`architecture.md`](architecture.md) — component boundaries and dependency direction.
 3. [`space-model.md`](space-model.md) — how runtime Spaces, apps, and persistent intent are represented.
-4. [`style-guide.md`](style-guide.md) — visual and interaction rules.
-5. [`code-style.md`](code-style.md) — engineering conventions.
-6. [`documentation-style.md`](documentation-style.md) — how project knowledge is written and maintained.
+4. [`user-configuration-model.md`](user-configuration-model.md) — SpaceDress's internal multi-app customization model and its boundary from the public standard.
+5. [`style-guide.md`](style-guide.md) — visual and interaction rules.
+6. [`code-style.md`](code-style.md) — engineering conventions.
+7. [`documentation-style.md`](documentation-style.md) — how project knowledge is written and maintained.
 
 ## Platform research
 
-- [`research/macos-integration.md`](research/macos-integration.md) — current integration strategy, API tiers, and uncertainty rules.
+- [`research/macos-integration.md`](research/macos-integration.md) — current integration strategy, API tiers, split geometry, and uncertainty rules.
 - [`research/prior-art.md`](research/prior-art.md) — relevant macOS projects and what they demonstrate.
 
 Research documents describe evidence and current hypotheses. They are not automatically architectural commitments.
@@ -24,7 +25,9 @@ Accepted architecture decisions live in [`decisions/`](decisions/). ADRs exist s
 
 ## Public standard
 
-The SpaceDress Style Manifest is maintained under [`../spec/`](../spec/). The specification is designed to remain useful even to alternate renderers and other tools.
+The **Desktop Switcher Appearance Specification (DSAS)** is maintained under [`../spec/`](../spec/). A conforming application document is a **Desktop Switcher Appearance Manifest (DSAM)**.
+
+DSAS is application-facing and implementation-neutral. SpaceDress's own multi-app user configuration is deliberately outside the specification.
 
 ## Maintainers
 

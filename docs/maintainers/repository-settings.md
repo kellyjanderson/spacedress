@@ -6,7 +6,7 @@ Some repository polish lives in GitHub settings rather than files. Apply this ch
 
 - Description: `Dress full-screen macOS Spaces for instant recognition in Mission Control.`
 - Website: leave unset until a project site/docs page exists.
-- Suggested topics: `macos`, `swift`, `mission-control`, `spaces`, `fullscreen`, `accessibility`, `window-management`, `utility`.
+- Suggested topics: `macos`, `swift`, `mission-control`, `spaces`, `fullscreen`, `desktop-switcher`, `accessibility`, `window-management`, `utility`.
 - Enable Issues.
 - Enable Discussions when there is enough traffic to separate support/design conversation from actionable issues.
 - Keep Wiki disabled unless it gains a distinct purpose; versioned project knowledge belongs in `docs/`.
@@ -67,7 +67,7 @@ A small useful initial set:
 - `type: feature`
 - `type: research`
 - `type: docs`
-- `type: manifest`
+- `type: dsas`
 - `type: security`
 
 ### Area
@@ -97,7 +97,7 @@ Use product/risk milestones rather than calendar quarters initially:
 1. `Feasibility`
 2. `Single Full Screen`
 3. `Split Full Screen`
-4. `Manifest 0.1`
+4. `DSAS 0.1`
 5. `First Public Release`
 
 ## Social preview

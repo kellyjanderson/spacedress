@@ -4,7 +4,7 @@ SpaceDress currently uses a **maintainer-led open development** model.
 
 ## Maintainer
 
-The upstream project maintainer is Kelly Eldritch (`@kellyjanderson`). The maintainer has final responsibility for releases, repository administration, security response, specification versioning, and resolving design deadlocks.
+The upstream project maintainer is Kelly Eldritch (`@kellyjanderson`). The maintainer has final responsibility for releases, repository administration, security response, specification stewardship, and resolving design deadlocks.
 
 ## Decision making
 
@@ -16,13 +16,16 @@ The strongest argument is reproducible evidence. Popularity, contributor seniori
 
 ## Public standard stewardship
 
-The SpaceDress Style Manifest is intended to be usable independently of the SpaceDress application. Changes therefore carry a higher compatibility obligation than internal implementation changes.
+The **Desktop Switcher Appearance Specification (DSAS)** is intended to be usable independently of the SpaceDress application. Changes therefore carry a higher compatibility obligation than internal implementation changes.
 
-Before a stable `1.0` manifest:
+The standard's name, document vocabulary, and conformance model should remain descriptive and implementation-neutral. SpaceDress-specific targeting, settings, persistence, and multi-app user rules belong in SpaceDress, not DSAS.
+
+Before a stable `1.0` specification:
 
 - experimentation is expected;
 - changes should still document migration impact;
-- readers should ignore unknown optional fields when safe.
+- readers should ignore unknown optional fields when safe;
+- application integration must remain optional rather than a prerequisite for useful renderer behavior.
 
 After `1.0`:
 

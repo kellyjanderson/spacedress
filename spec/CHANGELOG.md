@@ -1,18 +1,22 @@
-# SpaceDress Style Manifest changelog
+# Desktop Switcher Appearance Specification changelog
 
-The manifest standard is versioned independently of the SpaceDress application.
+DSAS is versioned independently of SpaceDress.
 
 ## 0.1 — Draft
 
 Initial experimental specification:
 
-- app-bundle discovery through `SpaceDressStyleManifest` or the conventional `Contents/Resources/SpaceDress/manifest.json` path;
+- neutral **Desktop Switcher Appearance Specification (DSAS)** name;
+- **Desktop Switcher Appearance Manifest (DSAM)** document terminology;
+- explicit separation from SpaceDress's internal multi-app user manifest;
+- renderer-derived application baselines are normal when no DSAM exists;
+- macOS app-bundle discovery through `DesktopSwitcherAppearanceManifest` or the conventional `Contents/Resources/DesktopSwitcherAppearance/manifest.json` path;
 - ordered declarative layers;
 - border and tint layers;
 - icon layer using actual bundle icon or local resource;
-- text layer using app title, document title, or literal text;
-- local bitmap image layer;
-- semantic placement and sizing;
-- split/tiled participant clipping rules;
-- local-resource containment requirements;
-- optional namespaced extension data.
+- app title, document title, and literal text sources;
+- local image overlays;
+- participant-local multi-app/split semantics;
+- local-resource containment;
+- extension namespace escape hatch;
+- JSON Schema and examples.

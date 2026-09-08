@@ -10,7 +10,7 @@ Use these categories deliberately.
 
 A public API/specification guarantee or a SpaceDress invariant.
 
-> SpaceDress Style Manifest v0.1 does not allow remote resources.
+> DSAS 0.1 does not allow remote manifest resources.
 
 ### Observation
 
@@ -22,7 +22,7 @@ Something reproduced in a stated environment.
 
 A conclusion supported by observations but not guaranteed by Apple.
 
-> This field appears to represent ...
+> These two participant window bounds appear to encode the native split ratio.
 
 ### Hypothesis
 
@@ -53,6 +53,8 @@ Confidence:
 Next falsifying test:
 ```
 
+For split/tiled tests also record participant window IDs, PIDs, raw bounds, derived normalized regions, and observed physical placement.
+
 Sanitize private paths, titles, user names, and screenshots before committing fixtures.
 
 ## Voice
@@ -69,18 +71,22 @@ Use these terms consistently:
 
 | Term | Meaning |
 | --- | --- |
+| SpaceDress | The macOS product/implementation |
+| DSAS | Desktop Switcher Appearance Specification, the neutral public standard |
+| DSAM | Desktop Switcher Appearance Manifest, an application-supplied DSAS document |
 | Space | A macOS Mission Control Space in the general sense |
 | full-screen Space | A Space created/managed for native full-screen content |
 | split/tiled full-screen Space | A full-screen Space with two app/window participants |
 | Desktop Space | A regular multi-window desktop Space |
-| participant | An app/process/window group contributing to a Space |
+| participant | An app/window contributing to a switcher item |
+| participant region | The participant's geometric portion of a Space/switcher item |
 | native reference | Any OS-provided Space ID, UUID, index, or equivalent observation |
 | title | A textual name displayed to identify content |
-| style | Declarative visual decoration |
-| manifest | Versioned data describing an app-preferred style |
+| application baseline | Appearance derived from ordinary platform/app metadata without DSAM |
+| user manifest | SpaceDress's internal multi-app customization data; not DSAS |
 | chrome | Decoration around/on top of the native thumbnail, not the thumbnail content itself |
 
-Use `SpaceDress` with a capital S and D for the product/standard. Use `spacedress` only where an identifier/path convention requires lowercase.
+Use `SpaceDress` with a capital S and D for the product. Do not use `SpaceDress` as the name of the public standard.
 
 ## Markdown
 

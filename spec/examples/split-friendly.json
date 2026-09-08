@@ -1,37 +1,33 @@
 {
-  "$schema": "../spacedress-style.schema.json",
+  "$schema": "../desktop-switcher-appearance.schema.json",
   "manifestVersion": "0.1",
   "name": "Split-friendly identity",
-  "description": "Avoids full-region artwork so the same style remains useful when clipped to one split participant.",
+  "description": "Uses participant-local treatment that remains legible when clipped to one region of a multi-participant switcher item.",
   "layers": [
     {
-      "id": "participant-border",
+      "id": "split-border",
       "type": "border",
-      "color": "#35C6A0",
-      "width": "thin",
-      "cornerRadius": "system",
-      "opacity": 0.95,
-      "contexts": ["single", "split"]
+      "contexts": ["split"],
+      "color": "#4E9AFF",
+      "width": "thin"
     },
     {
-      "id": "participant-icon",
+      "id": "app-icon",
       "type": "icon",
       "source": "bundleIcon",
-      "placement": "topTrailing",
-      "size": "medium",
-      "background": "scrim",
-      "contexts": ["single", "split"]
+      "placement": "topLeading",
+      "size": "large",
+      "background": "material"
     },
     {
-      "id": "participant-title",
+      "id": "document-title",
       "type": "text",
-      "source": "appTitle",
+      "source": "documentTitle",
       "placement": "bottomLeading",
       "size": "small",
-      "weight": "semibold",
+      "weight": "medium",
       "background": "scrim",
-      "maxLines": 1,
-      "contexts": ["single", "split"]
+      "maxLines": 1
     }
   ]
 }
