@@ -9,7 +9,7 @@ This document deliberately separates it from the [Desktop Switcher Appearance Sp
 There are two configuration authorities:
 
 1. **application authority** — information derived from the running application, optionally refined by an application-supplied Desktop Switcher Appearance Manifest (DSAM);
-2. **user authority** — SpaceDress's internal multi-app manifest, pair rules, instance assignments, presets, and global settings.
+2. **user authority** — SpaceDress's internal multi-app manifest, pair rules, instance assignments, presets, layout preferences, and global settings.
 
 The user authority wins.
 
@@ -30,6 +30,7 @@ SpaceDress user configuration needs to answer questions such as:
 - should one copied development build look different from another copy?
 - should multiple apps share a preset?
 - should a particular two-app split have a special treatment?
+- should a recurring two-app split restore a preferred width allocation?
 - how should five concurrent windows of the same app be visually separated?
 - should one specific document/window receive its own style?
 - does a user override an app's declared color, title, or artwork?
@@ -48,6 +49,8 @@ application
 ```
 
 A more specific user selection may override a less specific user selection. Required privacy, accessibility, and rendering-safety policy remains final.
+
+Layout preferences are associated with the split-pair context but are not visual appearance layers.
 
 ## Application identity
 
@@ -93,9 +96,65 @@ A pair rule may contain:
 
 - whole-Space/container decoration such as a shared outer border or title;
 - contextual participant overrides;
-- optional physical-side treatment applied only after current window geometry is known.
+- optional physical-side treatment applied only after current window geometry is known;
+- an optional preferred split allocation when native layout restoration is supported.
 
 Swapping the two windows left/right must not stop the logical pair rule from matching.
+
+## Preferred split allocation
+
+For a pair with distinguishable logical members, preferred geometry should be expressed **by member**, not merely by current side.
+
+Example:
+
+```text
+Chrome + iTerm2
+  Chrome: 65%
+  iTerm2: 35%
+```
+
+If the apps swap physical sides, Chrome should still receive the larger allocation when the pair is restored.
+
+Conceptually:
+
+```text
+PreferredSplitAllocation
+  memberShares
+    ChromeSelector: 0.65
+    iTerm2Selector: 0.35
+  applyPolicy: onceWhenPairBecomesStable
+```
+
+For same-app pairs or other cases where the two members cannot be durably distinguished, SpaceDress may persist a physical fallback such as:
+
+```text
+leftShare: 0.65
+```
+
+The observed participant rectangles remain the runtime source of truth.
+
+### Apply once, then respect the user
+
+The default behavior is one-shot restoration when a newly observed matching pair becomes stable.
+
+SpaceDress should **not continuously enforce** the configured percentage. If the user manually drags the divider after restoration, the changed layout remains in effect for that pair lifetime. The preferred ratio is applied again when the pair is recreated or when the user explicitly invokes **Restore Preferred Split**.
+
+The settings/context UI should also support **Remember Current Split**, which captures the current observed geometry into the pair rule.
+
+### Capability and clamping
+
+Layout restoration is capability-gated. The persisted preference may exist even on a macOS configuration where SpaceDress cannot currently apply it safely.
+
+After a restore attempt, SpaceDress re-observes actual geometry and records whether the result was:
+
+- achieved within tolerance;
+- clamped by macOS/application minimum-size constraints;
+- unsupported/unavailable;
+- failed or timed out.
+
+SpaceDress must not enter a retry loop that fights native constraints.
+
+See [ADR 0007 — Split-pair layout preferences](decisions/0007-split-pair-layout-preferences.md).
 
 ## Instance identity
 
@@ -207,6 +266,10 @@ PairRule
     members[2]
   containerAppearance?
   participantOverrides?
+  preferredLayout?
+    memberRelativeAllocation?   # preferred when members are distinguishable
+    physicalLeftShare?          # fallback when they are not
+    applyPolicy
   enabled
 ```
 
@@ -260,12 +323,15 @@ Whole-pair/container appearance is composed separately so it cannot erase partic
 
 An explicit instance choice is more specific than a generic app or pair-member rule.
 
+Pair layout restoration is a separate post-resolution action. It does not alter visual-style precedence.
+
 Examples:
 
 - replace a hard-to-read app icon with a custom local image;
 - give all terminal apps one border family;
 - assign different accents to two copies of the same application;
 - style Chrome + VS Code differently from either application alone;
+- restore Chrome + iTerm2 to a preferred 65/35 working split when supported;
 - automatically distribute five Chrome windows across five style slots;
 - manually choose a unique style for one current browser window;
 - remember a style for one document when a stable document identity is available;
@@ -283,6 +349,8 @@ Customize This Instance…
 Apply Instance Style >
 Customize App Defaults…
 Customize This Split Pair…
+Remember Current Split
+Restore Preferred Split
 Auto-assign Instance Styles >
 ```
 
@@ -302,4 +370,4 @@ Because this is internal machinery, SpaceDress may migrate it as the product evo
 
 That freedom is intentional. The project should not accidentally create a second public standard merely because the file becomes human-readable.
 
-See also [ADR 0006 — Layered user style selectors](decisions/0006-layered-user-style-selectors.md).
+See also [ADR 0006 — Layered user style selectors](decisions/0006-layered-user-style-selectors.md) and [ADR 0007 — Split-pair layout preferences](decisions/0007-split-pair-layout-preferences.md).
