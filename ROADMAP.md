@@ -6,6 +6,8 @@ For prompt-by-prompt execution, use [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PL
 
 Pair and per-instance styling discovered after the main slice IDs were numbered is tracked in the required pre-v1 [`docs/instance-pair-styling-tdd.md`](docs/instance-pair-styling-tdd.md) addendum rather than renumbering the existing execution plan.
 
+Preferred native split allocation is tracked separately in the capability-gated [`docs/split-layout-control-tdd.md`](docs/split-layout-control-tdd.md) addendum because macOS does not publish a dedicated cross-application Split View divider API and the mutation mechanism must be proven first.
+
 ## Phase 0 — Measure the closet
 
 Goal: establish repeatable macOS capability probes with SIP enabled.
@@ -18,6 +20,7 @@ Goal: establish repeatable macOS capability probes with SIP enabled.
 - [ ] verify split participant geometry can reliably identify physical left/right placement;
 - [ ] verify unequal split ratios can be preserved as normalized participant regions;
 - [ ] verify geometry with same-app split configurations;
+- [ ] probe whether native full-screen split participant size/position can be changed safely through supported Accessibility/system mechanisms;
 - [ ] map PID → `NSRunningApplication` → bundle URL, bundle identifier, localized name, and icon;
 - [ ] verify behavior with multiple copies of an app bundle in different folders;
 - [ ] verify multiple running instances of the same bundle;
@@ -28,7 +31,7 @@ Goal: establish repeatable macOS capability probes with SIP enabled.
 - [ ] record failure modes when private data is unavailable;
 - [ ] build a compatibility matrix for current supported macOS releases.
 
-**Exit criterion:** a diagnostic tool can print a trustworthy full-screen Space snapshot—including split participant geometry—and a prototype can place one stable decoration on the correct thumbnail region.
+**Exit criterion:** a diagnostic tool can print a trustworthy full-screen Space snapshot—including split participant geometry—and a prototype can place one stable decoration on the correct thumbnail region. Split-layout mutation has an evidence-backed capability result rather than an assumption.
 
 ## Phase 1 — First fitting
 
@@ -60,9 +63,12 @@ Goal: handle split/tiled full-screen as a first-class geometric model.
 - [ ] render both app icons without ambiguity;
 - [ ] define layer clipping/composition rules;
 - [ ] test same-app split configurations;
-- [ ] test participants from duplicate bundle identifiers/locations.
+- [ ] test participants from duplicate bundle identifiers/locations;
+- [ ] where the platform capability is proven, restore a recurring pair's preferred allocation once when the pair becomes stable;
+- [ ] verify app-relative allocation survives side swaps, e.g. Chrome remains 65% and iTerm2 35% regardless of current left/right placement;
+- [ ] respect manual divider changes after the one-shot restore rather than continuously enforcing the configured ratio.
 
-**Exit criterion:** split Spaces are at least as easy to identify as single-app full-screen Spaces.
+**Exit criterion:** split Spaces are at least as easy to identify as single-app full-screen Spaces. On configurations where native split mutation is declared supported, recurring pair geometry can also be restored predictably without fighting user interaction.
 
 ## Phase 3 — Desktop Switcher Appearance Specification
 
@@ -93,6 +99,9 @@ Goal: polished end-user configuration using **SpaceDress's private multi-app use
 - [ ] application selectors keyed primarily by bundle identifier with optional bundle-location/signing refinement;
 - [ ] canonical unordered two-app pair selectors for split-specific styling;
 - [ ] pair-level container styling and contextual participant overrides;
+- [ ] optional pair preferred-layout rule such as Chrome 65% / iTerm2 35%, kept outside DSAS;
+- [ ] one-action **Remember Current Split** capture when live pair geometry is known;
+- [ ] pair layout editor with app-relative percentages and Left/Right fallback for indistinguishable same-app members;
 - [ ] runtime participant/window instance model distinct from process identity;
 - [ ] current-instance styling even when no durable document identity exists;
 - [ ] durable per-document/per-instance rules only when stable identity exists;
@@ -112,7 +121,7 @@ Goal: polished end-user configuration using **SpaceDress's private multi-app use
 - [ ] keep runtime instance lease/cache state separate from durable user configuration;
 - [ ] keep the internal user manifest outside DSAS conformance/versioning.
 
-**Exit criterion:** a user can distinguish and directly customize several visually identical fullscreen windows from the same application, and recurring split pairs can have their own styling without relying on native Space identity or left/right ordering.
+**Exit criterion:** a user can distinguish and directly customize several visually identical fullscreen windows from the same application, recurring split pairs can have their own styling, and supported configurations can remember the pair's preferred working allocation without relying on native Space identity.
 
 ## Phase 5 — Regular Desktops, where useful
 
@@ -135,4 +144,4 @@ This phase must not force the full-screen identity model into a weaker index-bas
 - cloud accounts or synchronization;
 - telemetry as a prerequisite for operation.
 
-These can be revisited only if they become independently compelling and respect the project's security boundaries.
+Private native-window mutation is not an implicit fallback for split-layout restoration. If supported/system-mediated mutation is insufficient and private mutation becomes desirable, that requires its own explicit architectural decision.
