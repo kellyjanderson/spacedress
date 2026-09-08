@@ -53,13 +53,38 @@ This makes it possible to compare evidence without pretending two similarly name
 SpaceParticipant
   process
   application
+  windowID?
   windows[]
   document?
-  region?
-  role?
+  screenBounds?
+  normalizedRegion?
+  physicalSide?
+  geometryConfidence
 ```
 
 A single full-screen Space usually has one participant. A split/tiled Space has two first-class participants.
+
+The **rectangle is primary**. `physicalSide` is a derived convenience such as `left` or `right`, never the source of truth.
+
+### Split geometry
+
+For a conventional horizontal two-window split, the participant with the lower `midX` is physically left and the higher `midX` is physically right.
+
+SpaceDress retains the actual bounds so it can preserve unequal ratios and future arrangements instead of collapsing the model into two labels.
+
+Normalize participant rectangles relative to the tiled content frame (normally the union of participant bounds):
+
+```text
+ParticipantRegion
+  x       # 0...1
+  y       # 0...1
+  width   # 0...1
+  height  # 0...1
+```
+
+The normalized region can later be mapped into the Mission Control thumbnail frame.
+
+Owner-array order, PID order, window enumeration order, and Mission Control position do not define participant side.
 
 ### Process observation
 
@@ -88,7 +113,7 @@ The `canonicalBundleURL` matters because macOS can run multiple copies/builds of
 
 Resolution strategy:
 
-1. start from owner PID when available;
+1. start from owner PID/window when available;
 2. obtain `NSRunningApplication` for that PID;
 3. prefer its actual `bundleURL` rather than searching `/Applications` by name;
 4. construct `Bundle(url:)` for metadata;
@@ -97,7 +122,15 @@ Resolution strategy:
 
 If two processes originate from different app-package paths, they remain distinct even if their bundle identifiers match.
 
-If two processes originate from the exact same package, their runtime PIDs distinguish them, while default styling normally remains shared.
+If two processes originate from the exact same package, their runtime PIDs distinguish them, while derived application appearance normally remains shared.
+
+## Appearance and identity are separate
+
+Application identity answers **what app/window is this?** Appearance answers **how should it be represented?**
+
+The default appearance is derived automatically from the running app. A future application-supplied DSAM may refine that application-side appearance. SpaceDress's multi-app user manifest may override it.
+
+None of these appearance layers create Space identity.
 
 ## Persistent selectors
 
@@ -122,7 +155,7 @@ AppSelector
   teamIdentifier?      # optional authenticity constraint
 ```
 
-A split selector is an ordered or geometry-aware collection of app selectors.
+A split selector may consider the participant set and geometry when that distinction is meaningful, but never persists a native Space ID as identity.
 
 ## Titles
 
@@ -131,7 +164,7 @@ A title is presentation data, not identity by default.
 Potential title sources:
 
 - app localized name;
-- app-provided literal label through a manifest;
+- application-provided literal label through DSAM;
 - Accessibility window title;
 - Accessibility document title/path;
 - user-supplied label.
@@ -146,13 +179,12 @@ SpaceDress may reconcile snapshots to reduce visual churn within a session.
 
 Signals, strongest first where available:
 
-1. exact set of participant PIDs;
+1. exact set of participant PIDs/window IDs;
 2. native reference continuity during the same session;
 3. participant bundle identities;
-4. display association;
-5. split geometry/order;
-6. window IDs;
-7. Mission Control position.
+4. participant geometry;
+5. display association;
+6. Mission Control position.
 
 Mission Control position is deliberately weak because Spaces may reorder.
 

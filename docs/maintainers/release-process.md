@@ -6,7 +6,9 @@ This is a placeholder contract for future releases. It intentionally defines che
 
 Use semantic versioning for the SpaceDress application once public releases begin.
 
-The **Style Manifest version is separate** from the app version. A SpaceDress app release may support multiple manifest versions.
+The **Desktop Switcher Appearance Specification (DSAS) version is separate** from the SpaceDress app version. A SpaceDress release may support multiple DSAS/DSAM versions.
+
+SpaceDress's internal multi-app user-manifest format is product persistence, not DSAS, and may use its own migration/versioning scheme.
 
 ## Pre-release checklist
 
@@ -16,6 +18,7 @@ The **Style Manifest version is separate** from the app version. A SpaceDress ap
 - test current Apple-silicon hardware;
 - verify single full-screen;
 - verify split/tiled full-screen;
+- verify split participant bounds, physical side, and unequal ratios;
 - verify multi-display with separate Spaces enabled;
 - verify Mission Control overlay lifecycle and scaling;
 - document any private-SPI degradation.
@@ -27,12 +30,14 @@ The **Style Manifest version is separate** from the app version. A SpaceDress ap
 - review diagnostics for document titles/paths;
 - review entitlements and code-signing identity.
 
-### Style Manifest
+### DSAS / DSAM
 
-- validate bundled schema and examples;
-- run compatibility fixtures for every supported manifest version;
+- validate bundled DSAS schema and examples;
+- run compatibility fixtures for every supported DSAM version;
 - document additions/deprecations;
-- ensure app-bundled resources cannot escape their approved root.
+- ensure app-bundled DSAM resources cannot escape their approved root;
+- confirm a no-DSAM application still receives a useful derived baseline;
+- confirm SpaceDress user configuration is not being mistaken for a DSAS document.
 
 ### Distribution
 
@@ -53,7 +58,7 @@ Always call out:
 
 - newly supported/unsupported macOS versions;
 - changed permissions;
-- manifest compatibility changes;
+- DSAS/DSAM compatibility changes;
 - known Mission Control regressions;
 - security fixes.
 

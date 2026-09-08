@@ -1,5 +1,5 @@
 {
-  "$schema": "../spacedress-style.schema.json",
+  "$schema": "../desktop-switcher-appearance.schema.json",
   "manifestVersion": "0.1",
   "name": "Minimal identity",
   "layers": [

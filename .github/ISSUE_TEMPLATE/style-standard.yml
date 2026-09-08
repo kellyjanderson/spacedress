@@ -1,18 +1,22 @@
-name: Style Manifest standard proposal
-description: Propose a change to the public SpaceDress styling format.
-title: "[Manifest]: "
+name: DSAS proposal
+description: Propose a change to the Desktop Switcher Appearance Specification.
+title: "[DSAS]: "
 body:
+  - type: markdown
+    attributes:
+      value: |
+        DSAS is the application-facing interoperability standard. SpaceDress user rules and the internal multi-app manifest are product configuration, not DSAS.
   - type: textarea
     id: use-case
     attributes:
-      label: Use case
-      description: What can an app or user not express with the current manifest?
+      label: Application-facing use case
+      description: What can an application not express with the current Desktop Switcher Appearance Manifest?
     validations:
       required: true
   - type: textarea
     id: example
     attributes:
-      label: Proposed manifest example
+      label: Proposed DSAM example
       render: json
     validations:
       required: true
@@ -20,7 +24,14 @@ body:
     id: behavior
     attributes:
       label: Rendering semantics
-      description: Define behavior for single full-screen and split/tiled full-screen where relevant.
+      description: Define behavior for single-participant and multi-participant/split representations where relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: neutrality
+    attributes:
+      label: Interoperability / neutrality
+      description: Explain why this belongs in a renderer-neutral application standard rather than SpaceDress's internal user configuration.
     validations:
       required: true
   - type: textarea
@@ -40,9 +51,11 @@ body:
   - type: checkboxes
     id: boundaries
     attributes:
-      label: Manifest boundaries
+      label: Specification boundaries
       options:
         - label: The proposal remains declarative and does not execute app-supplied code or scripts.
           required: true
         - label: The proposal does not require remote assets.
+          required: true
+        - label: The proposal does not add SpaceDress-specific multi-app targeting or user-rule semantics to DSAS.
           required: true

@@ -31,11 +31,12 @@ The project intends to preserve these boundaries:
 
 - **No SIP weakening** as an installation requirement.
 - **No code injection into the Dock or WindowServer** in the normal product architecture.
-- **No executable code in style manifests.**
-- **No remote manifest assets** in the base specification.
+- **No executable code in DSAM documents.**
+- **No remote DSAM assets** in DSAS 0.1.
 - **No network service required** for normal operation.
 - Private SkyLight/CGS use, when present, is isolated and preferably read-only.
 - Application/document metadata stays local unless a future feature explicitly and transparently changes that policy.
+- SpaceDress's internal multi-app user manifest is local product configuration and is not an executable plugin format.
 
 ## Sensitive metadata
 

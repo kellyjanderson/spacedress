@@ -9,21 +9,31 @@ Goal: establish repeatable macOS capability probes with SIP enabled.
 - [ ] enumerate managed Spaces per display;
 - [ ] distinguish regular Desktop, single-app full-screen, and split/tiled full-screen Spaces;
 - [ ] resolve full-screen owner PID(s) where possible;
+- [ ] enumerate the actual participant window IDs for each full-screen/tiled Space;
+- [ ] obtain each participant window's screen-space bounds;
+- [ ] verify split participant geometry can reliably identify physical left/right placement;
+- [ ] verify unequal split ratios can be preserved as normalized participant regions;
+- [ ] verify geometry with same-app split configurations;
 - [ ] map PID → `NSRunningApplication` → bundle URL, bundle identifier, localized name, and icon;
 - [ ] verify behavior with multiple copies of an app bundle in different folders;
 - [ ] verify multiple running instances of the same bundle;
 - [ ] identify Mission Control open/close transitions;
 - [ ] determine thumbnail frames across display sizes, scaling modes, and macOS versions;
+- [ ] prove participant regions can be transformed correctly into split Mission Control thumbnail regions;
 - [ ] prove a click-through overlay can remain visually aligned during Mission Control animation;
 - [ ] record failure modes when private data is unavailable;
 - [ ] build a compatibility matrix for current supported macOS releases.
 
-**Exit criterion:** a diagnostic tool can print a trustworthy full-screen Space snapshot and a prototype can place one stable decoration on the correct thumbnail.
+**Exit criterion:** a diagnostic tool can print a trustworthy full-screen Space snapshot—including split participant geometry—and a prototype can place one stable decoration on the correct thumbnail region.
 
 ## Phase 1 — First fitting
 
-Goal: solve the original single-app full-screen recognition problem.
+Goal: solve the original single-app full-screen recognition problem **without requiring app adoption**.
 
+- [ ] derive application icon from the actual running bundle;
+- [ ] derive localized app title;
+- [ ] optionally derive a restrained accent/palette from the app icon;
+- [ ] obtain document/window title when available and permitted;
 - [ ] application icon overlay;
 - [ ] app title overlay;
 - [ ] configurable border;
@@ -33,14 +43,16 @@ Goal: solve the original single-app full-screen recognition problem.
 - [ ] no persistent dependency on native Space identifiers;
 - [ ] graceful fallback to app name/icon when richer identity fails.
 
-**Exit criterion:** a user with many dark-mode full-screen apps can identify the desired Space at a glance.
+**Exit criterion:** a user with many dark-mode full-screen apps can identify the desired Space at a glance even though none of those apps know SpaceDress exists.
 
 ## Phase 2 — Two-piece suit
 
-Goal: handle split/tiled full-screen as a first-class model.
+Goal: handle split/tiled full-screen as a first-class geometric model.
 
 - [ ] resolve both participants;
-- [ ] preserve participant ordering/geometry when available;
+- [ ] preserve participant window identity and normalized geometry;
+- [ ] derive physical left/right from geometry, never owner-array order;
+- [ ] preserve unequal split ratios;
 - [ ] render both app icons without ambiguity;
 - [ ] define layer clipping/composition rules;
 - [ ] test same-app split configurations;
@@ -48,35 +60,42 @@ Goal: handle split/tiled full-screen as a first-class model.
 
 **Exit criterion:** split Spaces are at least as easy to identify as single-app full-screen Spaces.
 
-## Phase 3 — The SpaceDress Style Manifest
+## Phase 3 — Desktop Switcher Appearance Specification
 
-Goal: let applications ship preferred styling without depending on SpaceDress internals.
+Goal: let applications optionally declare preferred switcher appearance without depending on SpaceDress internals.
 
-- [ ] finalize manifest discovery inside `.app` bundles;
+The public standard is the **Desktop Switcher Appearance Specification (DSAS)**. Its document format is the **Desktop Switcher Appearance Manifest (DSAM)**.
+
+- [ ] finalize the platform-neutral manifest vocabulary;
+- [ ] finalize the macOS app-bundle discovery profile;
 - [ ] validate manifest schema;
 - [ ] bundle-icon source;
 - [ ] app-title and document-title sources;
 - [ ] border, tint, icon, text, and bitmap image layers;
-- [ ] strict local-resource sandboxing;
+- [ ] strict local-resource containment;
 - [ ] unknown-field/version behavior;
-- [ ] user override precedence;
+- [ ] renderer/user-policy override rules;
 - [ ] manifest diagnostics and validation tool;
-- [ ] publish compatibility examples.
+- [ ] publish compatibility examples;
+- [ ] document how another renderer can implement DSAS without importing SpaceDress configuration semantics.
 
-**Exit criterion:** an unrelated macOS app can add a declarative resource to its bundle and reliably influence its SpaceDress thumbnail appearance.
+**Exit criterion:** an unrelated application can add a declarative DSAM and reliably influence a conforming desktop-switcher renderer without referencing SpaceDress.
 
 ## Phase 4 — Wardrobe
 
-Goal: polished end-user configuration.
+Goal: polished end-user configuration using **SpaceDress's private multi-app user manifest**.
 
+- [ ] define internal multi-app manifest structure;
+- [ ] application selectors by bundle identity/location where needed;
 - [ ] visual style editor;
 - [ ] per-app rules;
 - [ ] per-document rules where stable identity exists;
-- [ ] reusable user style packages;
+- [ ] reusable user style presets;
 - [ ] preview without entering Mission Control;
-- [ ] export/import styles;
+- [ ] export/import SpaceDress configuration;
 - [ ] accessibility controls for contrast, motion, and transparency;
-- [ ] privacy control for document titles.
+- [ ] privacy control for document titles;
+- [ ] keep the internal user manifest outside DSAS conformance/versioning.
 
 ## Phase 5 — Regular Desktops, where useful
 

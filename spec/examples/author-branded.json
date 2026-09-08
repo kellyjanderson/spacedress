@@ -1,32 +1,30 @@
 {
-  "$schema": "../spacedress-style.schema.json",
+  "$schema": "../desktop-switcher-appearance.schema.json",
   "manifestVersion": "0.1",
   "name": "Author branded",
   "description": "Example of a distinctive app-supplied border, restrained tint, icon, and local artwork.",
   "layers": [
     {
-      "id": "accent-tint",
-      "type": "tint",
-      "color": "#6B5CFFFF",
-      "opacity": 0.12
-    },
-    {
       "id": "accent-border",
       "type": "border",
-      "color": "#8B80FFFF",
+      "color": "#7A5CFF",
       "width": "medium",
-      "cornerRadius": "system",
-      "opacity": 1.0
+      "cornerRadius": "system"
     },
     {
-      "id": "brand-mark",
+      "id": "accent-tint",
+      "type": "tint",
+      "color": "#7A5CFF",
+      "opacity": 0.10
+    },
+    {
+      "id": "brand-art",
       "type": "image",
-      "resource": "SpaceDress/brand-mark.png",
+      "resource": "DesktopSwitcherAppearance/watermark.png",
       "placement": "bottomTrailing",
       "contentMode": "fit",
-      "opacity": 0.22,
-      "blendMode": "sourceOver",
-      "contexts": ["single"]
+      "opacity": 0.20,
+      "blendMode": "sourceOver"
     },
     {
       "id": "app-icon",
@@ -37,9 +35,9 @@
       "background": "material"
     },
     {
-      "id": "document",
+      "id": "app-title",
       "type": "text",
-      "source": "documentTitle",
+      "source": "appTitle",
       "placement": "bottomLeading",
       "size": "medium",
       "weight": "semibold",

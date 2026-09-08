@@ -14,16 +14,34 @@ In order:
 
 If decoration makes the underlying thumbnail harder to recognize, the styling is overdressed.
 
-## Default composition
+## Default composition requires no app support
 
-For a single full-screen app, the default synthesized style should be approximately:
+For a single full-screen app, SpaceDress's derived baseline should be approximately:
 
-- app icon in a consistent corner;
-- one concise app title when useful;
-- subtle border or accent derived from user choice or a deterministic neutral palette;
+- real app icon in a consistent corner;
+- one concise localized app title when useful;
+- subtle border or accent derived from a deterministic safe palette;
 - no full-thumbnail tint unless it adds meaningful distinction.
 
-The system app icon is a primary identity token and should not require an app-authored manifest.
+The system app icon and app title are primary identity tokens and **must not require DSAM adoption**.
+
+An optional Desktop Switcher Appearance Manifest may refine the application-side appearance, but no-manifest behavior is the product's primary bootstrap path.
+
+## Source precedence
+
+Think in two authority domains rather than one flat list.
+
+### Application-side appearance
+
+1. derive a useful baseline from the actual running app;
+2. overlay valid DSAM declarations supplied by that app.
+
+### User authority
+
+3. apply SpaceDress's internal multi-app user manifest;
+4. apply global accessibility/privacy/safety policy.
+
+The user wins over application preference.
 
 ## Split/tiled composition
 
@@ -31,10 +49,14 @@ A split Space should show **both** apps.
 
 Preferred behavior when participant geometry is known:
 
+- preserve the native participant ratio rather than assuming 50/50;
+- map each normalized participant region into the Mission Control thumbnail;
 - place each icon inside or adjacent to its participant region;
 - clip app-supplied tint/artwork to that participant's region;
-- permit a shared outer border only when it comes from a user-level whole-Space style;
+- permit a shared outer border only when it comes from SpaceDress user-level whole-Space styling;
 - avoid implying that one app owns the entire Space.
+
+Physical left/right is derived from window bounds, not owner-array order.
 
 When geometry is uncertain, use a neutral paired-icon treatment rather than guessing which side belongs to which app.
 
@@ -49,23 +71,23 @@ Guidelines:
 - avoid rapid animation;
 - use high-contrast fallback behavior when macOS Increase Contrast is enabled.
 
-A manifest may request a width/color; the renderer may clamp values to maintain usability.
+A DSAM or user rule may request a width/color; the renderer may clamp values to maintain usability.
 
 ## Color overlays
 
 Tints should preserve the thumbnail's legibility.
 
-- Treat manifest opacity as a request subject to user/accessibility policy.
+- Treat app-declared opacity as a request subject to user/accessibility policy.
 - Prefer low-opacity color as an identity cue.
-- Do not use an app manifest to make the thumbnail effectively opaque.
+- Do not allow an application declaration to make the thumbnail effectively opaque.
 - Reduce or remove translucency when Reduce Transparency is enabled.
 
 ## Icons
 
-Icon sources, in priority order:
+Icon sources, in priority order after resolution:
 
-1. explicit user-selected resource;
-2. valid manifest resource;
+1. explicit SpaceDress user-selected resource;
+2. valid DSAM resource when supplied by the app;
 3. actual runtime app bundle icon;
 4. generic application fallback.
 
@@ -80,7 +102,7 @@ Supported semantic sources include:
 - application title;
 - document/window title;
 - user-defined title;
-- manifest literal text where justified.
+- DSAM literal text where justified.
 
 Text guidelines:
 
@@ -101,12 +123,13 @@ App-bundled bitmap artwork can add distinctive identity, but it is the most like
 
 Rules:
 
-- resources must be local to the approved style package/app bundle;
+- DSAM resources must be local to the approved app resource root;
+- SpaceDress user resources follow SpaceDress's own local configuration rules;
 - images are clipped to their permitted region;
 - content mode is explicit (`fit` or `fill`);
 - opacity is clampable by user policy;
-- remote image URLs are not part of the base standard;
-- animation is not part of manifest v0.1.
+- remote image URLs are not part of DSAS 0.1;
+- animation is not part of DSAS 0.1.
 
 ## Interaction
 
@@ -151,4 +174,4 @@ The wardrobe vocabulary is useful for product navigation:
 - the visual editor may be a **Fitting Room**;
 - this document is the **dress code**.
 
-Do not carry the metaphor into low-level APIs where literal names are clearer. A type should be called `SpaceParticipant`, not `TrouserLeg`.
+Do not carry the metaphor into low-level APIs or the public standard where literal names are clearer. A type should be called `SpaceParticipant`, not `TrouserLeg`; the standard is DSAS, not "SpaceDress Protocol."
