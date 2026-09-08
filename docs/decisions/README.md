@@ -36,3 +36,4 @@ Do not rewrite an accepted ADR merely to make history look cleaner. If the decis
 - [`0004-declarative-style-manifest.md`](0004-declarative-style-manifest.md) — application appearance is optional declarative data under the neutral Desktop Switcher Appearance Specification; SpaceDress user configuration remains separate.
 - [`0005-split-placement-from-window-geometry.md`](0005-split-placement-from-window-geometry.md) — split participant placement and ratio come from window geometry, never owner-array order.
 - [`0006-layered-user-style-selectors.md`](0006-layered-user-style-selectors.md) — user styling has app, canonical split-pair, and instance/document/instance-slot selector levels; runtime IDs never become durable identity.
+- [`0007-split-pair-layout-preferences.md`](0007-split-pair-layout-preferences.md) — recurring split-pair rules may remember a preferred app-relative allocation and restore it once when the pair becomes stable, subject to a proven capability.
